@@ -4,7 +4,6 @@ import { Button, Spinner, TextInput } from "flowbite-react";
 import type { NextPage } from "next";
 import { useEffect, useState } from "react";
 
-import { PrimaryButton } from "../components/buttons";
 import { AddContactDialog } from "../components/dialog/AddContactDialog";
 import { ContactList, ContactListItem } from "../components/lists";
 import { Axios } from "../services";
@@ -41,10 +40,12 @@ const Home: NextPage = () => {
         <div className="grow" />
         <Button onClick={() => setIsDialogOpen(true)}>New</Button>
       </div>
-      <div className="my-4">
+      <div className="my-4 w-full">
         {isLoading ? (
-          <Spinner />
-        ) : (
+          <div className="flex items-center justify-center">
+            <Spinner />
+          </div>
+        ) : data.data.length > 0 ? (
           <ContactList>
             {data.data.map((contact: any, index: number) => {
               return (
@@ -59,6 +60,10 @@ const Home: NextPage = () => {
               );
             })}
           </ContactList>
+        ) : (
+          <div className="flex items-center justify-center">
+            <p>No contacts found</p>
+          </div>
         )}
       </div>
       <AddContactDialog
