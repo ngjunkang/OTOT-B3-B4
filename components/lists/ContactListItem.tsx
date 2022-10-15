@@ -1,11 +1,8 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { Axios } from "../../services";
 import { DeleteIconButton, EditIconButton } from "../buttons";
-
-type Contact = {
-  name: string;
-  email: string;
-  phone?: string;
-  gender?: string;
-};
+import { Contact } from "../types";
 
 type Props = {};
 
@@ -16,10 +13,33 @@ const ContactListItem = ({
   email,
   phone,
   gender,
+  id,
 }: ContactListItemProps) => {
+  console.log(phone);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const queryClient = useQueryClient();
+  const deleteContactMutation = useMutation(
+    () => {
+      // delete contact
+      return Axios.delete(`/contacts/${id}`);
+    },
+    {
+      onSuccess: async () => {
+        // refetch contacts
+        queryClient.invalidateQueries(["contacts"]);
+        await queryClient.refetchQueries(["contacts"]);
+        setIsDeleting(false);
+      },
+    }
+  );
+  const handleDeleteContact = () => {
+    setIsDeleting(true);
+    deleteContactMutation.mutate();
+  };
+
   const PhoneComponent = () => {
     return phone ? (
-      <p className="text-sm text-gray-500 truncate dark:text-gray-400">
+      <p className="text-sm text-white-500 truncate dark:text-white-400">
         {phone}
       </p>
     ) : (
@@ -28,7 +48,7 @@ const ContactListItem = ({
   };
   const GenderComponent = () => {
     return gender ? (
-      <p className="text-sm text-gray-500 truncate dark:text-gray-400">
+      <p className="text-sm text-white-500 truncate dark:text-white-400">
         {gender}
       </p>
     ) : (
@@ -37,14 +57,14 @@ const ContactListItem = ({
   };
   const NameComponent = () => {
     return (
-      <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+      <p className="text-sm font-medium text-white-900 truncate dark:text-white">
         {name}
       </p>
     );
   };
   const EmailComponent = () => {
     return (
-      <p className="text-sm text-gray-500 truncate dark:text-gray-400">
+      <p className="text-sm text-white-500 truncate dark:text-white-400">
         {email}
       </p>
     );
@@ -61,7 +81,10 @@ const ContactListItem = ({
           </div>
         </div>
         <EditIconButton />
-        <DeleteIconButton />
+        <DeleteIconButton
+          onClick={handleDeleteContact}
+          isLoading={isDeleting}
+        />
       </div>
     </li>
   );

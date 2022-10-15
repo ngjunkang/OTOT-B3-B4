@@ -2,7 +2,7 @@ import { PropsWithChildren } from "react";
 
 const ContactList = ({ children }: PropsWithChildren) => {
   return (
-    <ul className="flex flex-col min-w-md max-w-md divide-y divide-gray-200 dark:divide-gray-700 overflow-auto">
+    <ul className="min-w-xl max-w-xl divide-y divide-gray-200 dark:divide-gray-700">
       {children}
     </ul>
   );
