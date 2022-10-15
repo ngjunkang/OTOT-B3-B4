@@ -15,21 +15,12 @@ const Home: NextPage = () => {
     ["contacts"],
     async () => {
       const res = await Axios.get("/contacts");
-      console.log(res);
-
       return res.data;
     },
     {
       onSuccess: () => setLoading(false),
-      onError: (err: AxiosError) => console.log(err.response?.data),
     }
   );
-
-  useEffect(() => {
-    if (isError) {
-      console.log(error.response?.data);
-    }
-  }, [isError, error]);
 
   return (
     <div className="flex flex-col h-screen">
