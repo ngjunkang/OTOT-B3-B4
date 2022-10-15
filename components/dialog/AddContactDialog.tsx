@@ -78,6 +78,7 @@ const AddContactDialog = ({ onClose, isOpen, editMode, contact }: Props) => {
   };
 
   const handleAddContact = () => {
+    if (!name || !email) return;
     setIsSubmitting(true);
     setEmail("");
     setName("");
@@ -92,6 +93,7 @@ const AddContactDialog = ({ onClose, isOpen, editMode, contact }: Props) => {
   };
 
   const handleEditContact = () => {
+    if (!name || !email) return;
     setIsSubmitting(true);
     editContactMutation.mutate({
       email,
@@ -105,91 +107,94 @@ const AddContactDialog = ({ onClose, isOpen, editMode, contact }: Props) => {
     <Modal show={isOpen} size="md" popup={true} onClose={onClose}>
       <Modal.Header />
       <Modal.Body>
-        <div className="space-y-4 px-6 pb-4 sm:pb-6 lg:px-8 xl:pb-8">
-          <h3 className="text-xl font-medium text-gray-900 dark:text-white">
-            {editMode ? "Edit Contact" : "Add Contact"}
-          </h3>
-          <div>
-            <div className="mb-1 block">
-              <Label htmlFor="name" value="Name*" />
-            </div>
-            <TextInput
-              id="name"
-              placeholder="John Doe"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required={true}
-            />
-          </div>
-          <div>
-            <div className="mb-1 block">
-              <Label htmlFor="email" value="Email*" />
-            </div>
-            <TextInput
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="name@company.com"
-              required={true}
-            />
-          </div>
-          <div>
-            <div className="mb-1 block">
-              <Label htmlFor="gender" value="Gender" />
-            </div>
-            <fieldset className="flex flex-col gap-4" id="gender">
-              <div className="flex items-center gap-2">
-                <Radio
-                  id="na"
-                  name="gender"
-                  value="na"
-                  checked={!gender}
-                  onChange={handleRadioChange}
-                />
-                <Label htmlFor="na">N/A</Label>
+        <form>
+          <div className="space-y-4 px-6 pb-4 sm:pb-6 lg:px-8 xl:pb-8">
+            <h3 className="text-xl font-medium text-gray-900 dark:text-white">
+              {editMode ? "Edit Contact" : "Add Contact"}
+            </h3>
+            <div>
+              <div className="mb-1 block">
+                <Label htmlFor="name" value="Name*" />
               </div>
-              <div className="flex items-center gap-2">
-                <Radio
-                  id="male"
-                  name="gender"
-                  value="Male"
-                  checked={gender == "Male"}
-                  onChange={handleRadioChange}
-                />
-                <Label htmlFor="male">Male</Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Radio
-                  id="female"
-                  name="gender"
-                  value="Female"
-                  checked={gender == "Female"}
-                  onChange={handleRadioChange}
-                />
-                <Label htmlFor="female">Female</Label>
-              </div>
-            </fieldset>
-          </div>
-          <div>
-            <div className="mb-2 block">
-              <Label htmlFor="phone" value="Phone" />
+              <TextInput
+                id="name"
+                placeholder="John Doe"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required={true}
+              />
             </div>
-            <TextInput
-              id="phone"
-              placeholder="98765432"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
+            <div>
+              <div className="mb-1 block">
+                <Label htmlFor="email" value="Email*" />
+              </div>
+              <TextInput
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="name@company.com"
+                required={true}
+              />
+            </div>
+            <div>
+              <div className="mb-1 block">
+                <Label htmlFor="gender" value="Gender" />
+              </div>
+              <fieldset className="flex flex-col gap-4" id="gender">
+                <div className="flex items-center gap-2">
+                  <Radio
+                    id="na"
+                    name="gender"
+                    value="na"
+                    checked={!gender}
+                    onChange={handleRadioChange}
+                  />
+                  <Label htmlFor="na">N/A</Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Radio
+                    id="male"
+                    name="gender"
+                    value="Male"
+                    checked={gender == "Male"}
+                    onChange={handleRadioChange}
+                  />
+                  <Label htmlFor="male">Male</Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Radio
+                    id="female"
+                    name="gender"
+                    value="Female"
+                    checked={gender == "Female"}
+                    onChange={handleRadioChange}
+                  />
+                  <Label htmlFor="female">Female</Label>
+                </div>
+              </fieldset>
+            </div>
+            <div>
+              <div className="mb-2 block">
+                <Label htmlFor="phone" value="Phone" />
+              </div>
+              <TextInput
+                id="phone"
+                placeholder="98765432"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+            </div>
+            <div className="w-full">
+              <PrimaryButton
+                isLoading={isSubmitting}
+                type="submit"
+                onClick={editMode ? handleEditContact : handleAddContact}
+              >
+                {editMode ? "Edit contact" : "Add contact"}
+              </PrimaryButton>
+            </div>
           </div>
-          <div className="w-full">
-            <PrimaryButton
-              isLoading={isSubmitting}
-              onClick={editMode ? handleEditContact : handleAddContact}
-            >
-              {editMode ? "Edit contact" : "Add contact"}
-            </PrimaryButton>
-          </div>
-        </div>
+        </form>
       </Modal.Body>
     </Modal>
   );
