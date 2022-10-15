@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Axios } from "../../services";
 import { DeleteIconButton, EditIconButton } from "../buttons";
+import { AddContactDialog } from "../dialog";
 import { Contact } from "../types";
 
 type Props = {};
@@ -15,7 +16,7 @@ const ContactListItem = ({
   gender,
   id,
 }: ContactListItemProps) => {
-  console.log(phone);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const queryClient = useQueryClient();
   const deleteContactMutation = useMutation(
@@ -80,12 +81,18 @@ const ContactListItem = ({
             <GenderComponent />
           </div>
         </div>
-        <EditIconButton />
+        <EditIconButton onClick={() => setIsDialogOpen(true)} />
         <DeleteIconButton
           onClick={handleDeleteContact}
           isLoading={isDeleting}
         />
       </div>
+      <AddContactDialog
+        onClose={() => setIsDialogOpen(false)}
+        isOpen={isDialogOpen}
+        editMode
+        contact={{ name, email, phone, gender, id }}
+      />
     </li>
   );
 };

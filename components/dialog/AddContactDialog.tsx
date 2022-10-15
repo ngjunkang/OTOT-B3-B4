@@ -1,20 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  Button,
-  Checkbox,
-  Label,
-  Modal,
-  Radio,
-  TextInput,
-} from "flowbite-react";
-import { type } from "os";
-import {
-  ChangeEventHandler,
-  DOMAttributes,
-  FormEventHandler,
-  useEffect,
-  useState,
-} from "react";
+import { Label, Modal, Radio, TextInput } from "flowbite-react";
+import { useState } from "react";
 import { Axios } from "../../services";
 import { PrimaryButton } from "../buttons";
 import { Contact } from "../types";
@@ -22,15 +8,23 @@ import { Contact } from "../types";
 type Props = {
   onClose: () => void;
   isOpen: boolean;
+  editMode?: boolean;
+  contact?: Contact;
 };
 
-const AddContactDialog = ({ onClose, isOpen }: Props) => {
+const AddContactDialog = ({ onClose, isOpen, editMode, contact }: Props) => {
   const queryClient = useQueryClient();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState<string>("");
+  const [name, setName] = useState(
+    editMode && contact?.name ? contact?.name : ""
+  );
+  const [email, setEmail] = useState(
+    editMode && contact?.email ? contact?.email : ""
+  );
+  const [phone, setPhone] = useState(
+    editMode && contact?.phone ? contact?.phone : ""
+  );
   const [gender, setGender] = useState<"Male" | "Female" | undefined>(
-    undefined
+    editMode && contact?.gender ? contact?.gender : undefined
   );
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -47,6 +41,28 @@ const AddContactDialog = ({ onClose, isOpen }: Props) => {
         queryClient.invalidateQueries(["contacts"]);
         await queryClient.refetchQueries(["contacts"]);
         setIsSubmitting(false);
+      },
+    }
+  );
+
+  const editContactMutation = useMutation(
+    async ({ email, name, gender, phone }: Contact) => {
+      // delete contact
+      const res = await Axios.put(`/contacts/${contact?.id}`, {
+        email,
+        gender,
+        name,
+        phone,
+      });
+      return res.data;
+    },
+    {
+      onSuccess: async () => {
+        // refetch contacts
+        queryClient.invalidateQueries(["contacts"]);
+        await queryClient.refetchQueries(["contacts"]);
+        setIsSubmitting(false);
+        onClose();
       },
     }
   );
@@ -75,13 +91,23 @@ const AddContactDialog = ({ onClose, isOpen }: Props) => {
     });
   };
 
+  const handleEditContact = () => {
+    setIsSubmitting(true);
+    editContactMutation.mutate({
+      email,
+      name,
+      gender: gender ? gender : undefined,
+      phone: phone ? phone : undefined,
+    });
+  };
+
   return (
     <Modal show={isOpen} size="md" popup={true} onClose={onClose}>
       <Modal.Header />
       <Modal.Body>
         <div className="space-y-4 px-6 pb-4 sm:pb-6 lg:px-8 xl:pb-8">
           <h3 className="text-xl font-medium text-gray-900 dark:text-white">
-            Add contact
+            {editMode ? "Edit Contact" : "Add Contact"}
           </h3>
           <div>
             <div className="mb-1 block">
@@ -111,13 +137,15 @@ const AddContactDialog = ({ onClose, isOpen }: Props) => {
             <div className="mb-1 block">
               <Label htmlFor="gender" value="Gender" />
             </div>
-            <fieldset
-              className="flex flex-col gap-4"
-              id="gender"
-              onChange={handleRadioChange}
-            >
+            <fieldset className="flex flex-col gap-4" id="gender">
               <div className="flex items-center gap-2">
-                <Radio id="na" name="gender" value="na" checked={!gender} />
+                <Radio
+                  id="na"
+                  name="gender"
+                  value="na"
+                  checked={!gender}
+                  onChange={handleRadioChange}
+                />
                 <Label htmlFor="na">N/A</Label>
               </div>
               <div className="flex items-center gap-2">
@@ -126,6 +154,7 @@ const AddContactDialog = ({ onClose, isOpen }: Props) => {
                   name="gender"
                   value="Male"
                   checked={gender == "Male"}
+                  onChange={handleRadioChange}
                 />
                 <Label htmlFor="male">Male</Label>
               </div>
@@ -135,6 +164,7 @@ const AddContactDialog = ({ onClose, isOpen }: Props) => {
                   name="gender"
                   value="Female"
                   checked={gender == "Female"}
+                  onChange={handleRadioChange}
                 />
                 <Label htmlFor="female">Female</Label>
               </div>
@@ -152,8 +182,11 @@ const AddContactDialog = ({ onClose, isOpen }: Props) => {
             />
           </div>
           <div className="w-full">
-            <PrimaryButton isLoading={isSubmitting} onClick={handleAddContact}>
-              Add
+            <PrimaryButton
+              isLoading={isSubmitting}
+              onClick={editMode ? handleEditContact : handleAddContact}
+            >
+              {editMode ? "Edit contact" : "Add contact"}
             </PrimaryButton>
           </div>
         </div>
