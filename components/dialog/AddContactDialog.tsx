@@ -42,6 +42,7 @@ const AddContactDialog = ({ onClose, isOpen, editMode, contact }: Props) => {
         queryClient.invalidateQueries(["contacts"]);
         await queryClient.refetchQueries(["contacts"]);
         setIsSubmitting(false);
+        onClose();
       },
     }
   );
@@ -78,8 +79,8 @@ const AddContactDialog = ({ onClose, isOpen, editMode, contact }: Props) => {
     }
   };
 
-  const handleAddContact = () => {
-    if (!name || !email) return;
+  const handleAddContact = (e: any) => {
+    e.preventDefault();
     setIsSubmitting(true);
     setEmail("");
     setName("");
@@ -93,9 +94,10 @@ const AddContactDialog = ({ onClose, isOpen, editMode, contact }: Props) => {
     });
   };
 
-  const handleEditContact = () => {
-    if (!name || !email) return;
+  const handleEditContact = (e: any) => {
+    e.preventDefault();
     setIsSubmitting(true);
+
     editContactMutation.mutate({
       email,
       name,
@@ -108,7 +110,7 @@ const AddContactDialog = ({ onClose, isOpen, editMode, contact }: Props) => {
     <Modal show={isOpen} size="md" popup={true} onClose={onClose}>
       <Modal.Header />
       <Modal.Body>
-        <form>
+        <form onSubmit={editMode ? handleEditContact : handleAddContact}>
           <div className="space-y-4 px-6 pb-4 sm:pb-6 lg:px-8 xl:pb-8">
             <h3 className="text-xl font-medium text-gray-900 dark:text-white">
               {editMode ? "Edit Contact" : "Add Contact"}
@@ -186,11 +188,7 @@ const AddContactDialog = ({ onClose, isOpen, editMode, contact }: Props) => {
               />
             </div>
             <div className="w-full">
-              <PrimaryButton
-                isLoading={isSubmitting}
-                type="submit"
-                onClick={editMode ? handleEditContact : handleAddContact}
-              >
+              <PrimaryButton isLoading={isSubmitting} type="submit">
                 {editMode ? "Edit contact" : "Add contact"}
               </PrimaryButton>
             </div>
