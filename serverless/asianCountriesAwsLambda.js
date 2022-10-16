@@ -18,9 +18,15 @@ const cleanAsianCountry = (asianCountry) => {
   const currencies = [];
   for (const i in asianCountry.currencies)
     currencies.push({ code: i, ...asianCountry.currencies[i] });
-  const flagUrl = asianCountry.flags.png;
+  const flagImageUrl = asianCountry.flags.png;
   const population = asianCountry.population;
-  return { country, capital, currency: currencies[0], flagUrl, population };
+  return {
+    country,
+    capital,
+    currency: currencies[0],
+    flagImageUrl,
+    population,
+  };
 };
 
 exports.handler = async (event) => {
