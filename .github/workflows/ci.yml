@@ -27,7 +27,7 @@ jobs:
           node-version: "16"
       - name: Install dependencies
         run: yarn
-      - name: Running tests
+      - name: Running lint
         run: yarn lint
       - name: Building project
         run: yarn build
