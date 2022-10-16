@@ -1,9 +1,9 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { AppProps } from "next/app";
+import Head from "next/head";
 
 import "../styles/globals.css";
 import { AppLayout } from "../components/layouts";
-import Head from "next/head";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const queryClient = new QueryClient();

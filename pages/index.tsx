@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { AxiosError } from "axios";
-import { Button, Spinner, TextInput } from "flowbite-react";
+import { Button, Spinner } from "flowbite-react";
 import type { NextPage } from "next";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { AddContactDialog } from "../components/dialog/AddContactDialog";
 import { ContactList, ContactListItem } from "../components/lists";
@@ -11,7 +10,7 @@ import { Axios } from "../services";
 const Home: NextPage = () => {
   const [isLoading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { isError, data, error } = useQuery(
+  const { data } = useQuery(
     ["contacts"],
     async () => {
       const res = await Axios.get("/contacts");
