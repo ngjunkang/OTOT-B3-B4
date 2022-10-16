@@ -64,6 +64,10 @@ const AsiaPage: NextPage = () => {
     }
   );
 
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
   return (
     <div className="flex flex-col h-screen p-6">
       {isLoading ? (
