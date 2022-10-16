@@ -2,7 +2,7 @@
 
 ## Setup Instructions
 
-1. Create .env.local file by copying `.env.example` file
+1. Create `.env.local` file by copying `.env.example` file
 2. `yarn`
 3. `yarn build`
 4. `yarn start`
