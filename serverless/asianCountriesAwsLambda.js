@@ -13,7 +13,7 @@ const getCountries = (requestOptions) =>
   });
 
 const cleanAsianCountry = (asianCountry) => {
-  const country = asianCountry.name.official;
+  const name = asianCountry.name.official;
   const capital = asianCountry.capital ? asianCountry.capital[0] : "";
   const currencies = [];
   for (const i in asianCountry.currencies)
@@ -21,7 +21,7 @@ const cleanAsianCountry = (asianCountry) => {
   const flagImageUrl = asianCountry.flags.png;
   const population = asianCountry.population;
   return {
-    country,
+    name,
     capital,
     currency: currencies[0],
     flagImageUrl,
