@@ -32,7 +32,7 @@ const AddContactDialog = ({ onClose, isOpen, editMode, contact }: Props) => {
 
   const addContactMutation = useMutation(
     async ({ email, name, gender, phone }: Contact) => {
-      // delete contact
+      // add contact
       const res = await Axios.post("/contacts", { email, gender, name, phone });
       return res.data;
     },
@@ -49,7 +49,7 @@ const AddContactDialog = ({ onClose, isOpen, editMode, contact }: Props) => {
 
   const editContactMutation = useMutation(
     async ({ email, name, gender, phone }: Contact) => {
-      // delete contact
+      // update contact
       const res = await Axios.put(`/contacts/${contact?.id}`, {
         email,
         gender,
