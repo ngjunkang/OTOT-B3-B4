@@ -71,7 +71,7 @@ const AsiaPage: NextPage = () => {
   return (
     <div className="flex flex-col h-screen p-6 space-y-3">
       <div className="flex items-center justify-center">
-        <h1 className="text-4xl font-bold">Asia Countries</h1>
+        <h1 className="text-4xl font-bold">Asian Countries</h1>
       </div>
       {isLoading ? (
         <div className="flex items-center justify-center">
