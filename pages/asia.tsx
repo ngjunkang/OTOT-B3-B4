@@ -46,7 +46,7 @@ const TableHeader = () => {
       <Table.HeadCell>Flag</Table.HeadCell>
       <Table.HeadCell>Capital</Table.HeadCell>
       <Table.HeadCell>Population</Table.HeadCell>
-      <Table.HeadCell>Currency</Table.HeadCell>
+      <Table.HeadCell>Currency code</Table.HeadCell>
     </Table.Head>
   );
 };
@@ -69,9 +69,14 @@ const AsiaPage: NextPage = () => {
   }, [data]);
 
   return (
-    <div className="flex flex-col h-screen p-6">
+    <div className="flex flex-col h-screen p-6 space-y-3">
+      <div className="flex items-center justify-center">
+        <h1 className="text-4xl font-bold">Asia Countries</h1>
+      </div>
       {isLoading ? (
-        <Spinner />
+        <div className="flex items-center justify-center">
+          <Spinner />
+        </div>
       ) : data ? (
         <Table striped={true}>
           <TableHeader />
