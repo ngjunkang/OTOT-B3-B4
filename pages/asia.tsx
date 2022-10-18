@@ -53,14 +53,14 @@ const TableHeader = () => {
 
 const AsiaPage: NextPage = () => {
   const [isLoading, setLoading] = useState(true);
-  const { data } = useQuery(
+  const { data, isError } = useQuery(
     ["contacts"],
     async (): Promise<Country[]> => {
       const res = await AsianCountriesAxios.get("/");
       return res.data;
     },
     {
-      onSuccess: () => setLoading(false),
+      onSettled: () => setLoading(false),
     }
   );
 
@@ -72,6 +72,10 @@ const AsiaPage: NextPage = () => {
       {isLoading ? (
         <div className="flex items-center justify-center">
           <Spinner />
+        </div>
+      ) : isError ? (
+        <div className="flex items-center justify-center">
+          <p>Error fetching data! Please contact the administrator.</p>
         </div>
       ) : data ? (
         <Table striped={true}>
